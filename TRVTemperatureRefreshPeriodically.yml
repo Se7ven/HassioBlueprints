@@ -11,8 +11,11 @@ blueprint:
     period:
       name: Time period (minute)
       selector:
-        entity:
-          domain: input_number
+        number:
+          min: 0.0
+          max: 100.0
+          mode: box
+          step: 1.0
   source_url: https://github.com/Se7ven/HassioBlueprints.git
 variables:
   valve: !input valve
