@@ -1,5 +1,5 @@
 blueprint:
-  name: Temperature Calibration
+  name: TRV Temperature Calibration
   description: Temperature calibration for Zigbee valve TS0601, according to external
     temperature sensor
   domain: automation
