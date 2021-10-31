@@ -1,0 +1,27 @@
+blueprint:
+  name: TRV Temperature Refresh
+  description: Temperature Refresh for Zigbee valve TS0601, every n minute
+  domain: automation
+  input:
+    valve:
+      name: Smart Valve
+      selector:
+        entity:
+          domain: climate
+    period:
+      name: Time period (minute)
+      selector:
+        entity:
+          domain: input_number
+  source_url: https://github.com/Se7ven/HassioBlueprints.git
+variables:
+  valve: !input valve
+  temp_sensor: !input period
+trigger:
+  - platform: time_pattern
+    minutes: !input period
+action:
+  - service: mqtt.publish
+    data_template:
+      topic: "zigbee2mqtt/{{state_attr(valve,'friendly_name')}}/set/local_temperature_calibration"
+      payload_template: "zigbee2mqtt/{{state_attr(valve,'friendly_name')}}/set/local_temperature_calibration"
