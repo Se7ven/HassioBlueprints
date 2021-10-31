@@ -27,4 +27,4 @@ action:
   - service: mqtt.publish
     data_template:
       topic: "zigbee2mqtt/{{state_attr(valve,'friendly_name')}}/set/local_temperature_calibration"
-      payload_template: "zigbee2mqtt/{{state_attr(valve,'friendly_name')}}/set/local_temperature_calibration"
+      payload_template: "{{ state_attr(valve, 'local_temperature_calibration')|float(0) | round(1, 'half') }}"
