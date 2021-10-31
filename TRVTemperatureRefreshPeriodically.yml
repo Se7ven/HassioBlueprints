@@ -14,12 +14,12 @@ blueprint:
         number:
           min: 0.0
           max: 100.0
-          mode: box
+          mode: slider
           step: 1.0
   source_url: https://github.com/Se7ven/HassioBlueprints.git
 variables:
   valve: !input valve
-  temp_sensor: !input period
+  period: !input period
 trigger:
   - platform: time_pattern
     minutes: !input period
