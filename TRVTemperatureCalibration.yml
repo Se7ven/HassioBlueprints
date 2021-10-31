@@ -26,6 +26,9 @@ trigger:
     entity_id: !input valve
     attribute: current_temperature
     for: 00:00:02
+  - platform: state
+    entity_id: !input temp_sensor
+    for: 00:00:02
 condition:
   condition: and
   conditions:
