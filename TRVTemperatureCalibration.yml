@@ -1,0 +1,43 @@
+blueprint:
+  name: Temperature Calibration
+  description: Temperature calibration for Zigbee valve TS0601, according to external
+    temperature sensor
+  domain: automation
+  input:
+    valve:
+      name: Smart Valve
+      selector:
+        entity:
+          domain: climate
+    temp_sensor:
+      name: Temperature Sensor
+      selector:
+        entity:
+          domain: sensor
+          device_class: temperature
+  source_url: https://github.com/Se7ven/HassioBlueprints.git
+variables:
+  valve: !input valve
+  temp_sensor: !input temp_sensor
+trigger:
+  - platform: time_pattern
+    minutes: "/1"
+  - platform: state
+    entity_id: !input valve
+    attribute: current_temperature
+    for: 00:00:02
+condition:
+  condition: and
+  conditions:
+    - condition: template
+      value_template: "{{ states(temp_sensor) != 'unavailable' }}"
+    - condition: template
+      value_template: "{{ states(temp_sensor) != 'unknown' }}"
+    - condition: template
+      value_template: "{{states(temp_sensor)|float(0) | round(1,'half') - (state_attr(valve,'current_temperature')|float(0) | round(1, 'half') - state_attr(valve,'local_temperature_calibration')|float(0) | round(1, 'half')) != state_attr(valve, 'local_temperature_calibration')|float(0) | round(1, 'half')}}"
+action:
+  - service: mqtt.publish
+    data_template:
+      topic: "zigbee2mqtt/{{state_attr(valve,'friendly_name')}}/set/local_temperature_calibration"
+      payload_template: >-
+        {{states(temp_sensor)|float(0) | round(1,'half') - (state_attr(valve,'current_temperature')|float(0) | round(1, 'half') - state_attr(valve,'local_temperature_calibration')|float(0) | round(1, 'half'))}}
